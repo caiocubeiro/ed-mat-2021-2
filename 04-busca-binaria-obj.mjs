@@ -1,4 +1,6 @@
-function BuscaBinaria (vetor, valorbusca, fnComp){
+let comps
+
+function BuscaBinaria (vetor, fnComp){
     comps = 0
     let ini = 0
     let fim = vetor.length - 1
@@ -10,12 +12,16 @@ function BuscaBinaria (vetor, valorbusca, fnComp){
 
         switch(fnComp(vetor[meio])){
             case 0: //Encontrando o valor de busca
+                comps++
                 return meio
                 
             case 1:  //Valor busca > valor de busca
+                comps += 2    
                 ini = meio + 1
+                break
 
             default: // -1, valor de busca < valor do meio do vetor
+                comps += 2
                 fim = meio - 1
         }
     }
@@ -39,8 +45,29 @@ function BuscaBinaria (vetor, valorbusca, fnComp){
     -1 -> caso o valor de busca jea MENOR que o valor do meio do vetor
 */
 
-function comparar(valorMeio, valorbusca){
+function comparar(valorMeio, valorbusca = 'FAUSTO'){
     if(valorbusca === valorMeio.first_name) return 0
     else if(valorbusca > valorMeio.first_name) return 1
     else return -1
 }
+
+import {objNomes} from './data/vetor-obj-nomes.mjs'
+
+console.log('Posição de FAUSTO', BuscaBinaria(objNomes, comparar))
+console.log('Comparações', comps)
+
+console.log('Posição de first_name === ULISSES', BuscaBinaria(objNomes, 
+    (valorMeio, valorBusca = 'ULISSES') => {
+        if(valorBusca === valorMeio.first_name) return 0
+        else if (valorBusca > valorMeio.first_name) return 1        
+        else return -1  }
+))
+console.log('Comparações:', comps)
+
+console.log('Posição de first_name === TWITTERSON', BuscaBinaria(objNomes, 
+    (valorMeio, valorBusca = 'TWITTERSON') => {
+        if(valorBusca === valorMeio.first_name) return 0
+        else if (valorBusca > valorMeio.first_name) return 1        
+        else return -1  }
+))
+console.log('Comparações:', comps)
