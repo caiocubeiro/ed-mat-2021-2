@@ -1,15 +1,6 @@
-/*    MERGE SORT    
-
-No processo de ordenação, esse algoritmo "desmonta" o vetor original    
-contendo N elementos até obter N vetores de apenas um elemento cada um.    
-Em seguida, usando a técnica de mesclagem (merge), "remonta" o vetor,    
-dessa vez com os elementos já em ordem.
-
-*/
-
 let comps = 0, divisoes = 0, juncoes = 0
 
-function mergeSort (vetor){
+function mergeSort (vetor, fnComp){
     if(vetor.length < 2) return vetor
 
     // acha o meio (aproximado) do vetor
@@ -26,8 +17,8 @@ function mergeSort (vetor){
 
     //console.log(vetEsq, vetDir)
 
-    vetEsq = mergeSort(vetEsq)
-    vetDir = mergeSort(vetDir)
+    vetEsq = mergeSort(vetEsq, fnComp)
+    vetDir = mergeSort(vetDir, fnComp)
 
     // Mesclagem ordenada de vetEsq com vetDir
     let posEsq = 0, posDir = 0, vetRes = []
@@ -35,7 +26,9 @@ function mergeSort (vetor){
     while (posEsq < vetEsq.length && posDir < vetDir.length){
         // Quando o menor elemento for o do vetor esquerdo
         comps++
-        if(vetEsq[posEsq] < vetDir[posDir]){
+        // A ordem dos parametros na chamada a função de comparação deve ser invertida
+        // porque o if é verdadeiro quando o primeiro elemento é menor que o segundo
+        if(fnComp(vetDir[posDir]), vetEsq[posEsq]){
             vetRes.push(vetEsq[posEsq])
             posEsq++
         }
@@ -66,23 +59,16 @@ function mergeSort (vetor){
     return [...vetRes,...sobra]
 }
 
-let nums = [77, 44, 22, 33, 99, 55, 88, 0, 66, 11]
+import { objMotoristas } from './data/motoristas-obj-desord.mjs'
 
-let numsOrd = mergeSort(nums)
+//Ordenação em dois niveis 
+let objMotoristasOrd = mergeSort(objMotoristas, (elem1, elem2) => {
+    if(elem1.razao_social === elem2.razao_social){
+        return elem1.nome_motorista > elem2.nome_motorista
+    }
+    else return elem1.razao_social > elem2.razao_social
+})
 
-console.log({numsOrd})
-console.log("Comps:", comps, "Div:", divisoes, "Jun:", juncoes)
-
-// Quanto temos algoritmos de orndenação recursivos, as variaves de estatista não podem se reniciadas dentro da propria função
-comps = 0, divisoes = 0, juncoes = 0
-
-import { nomes } from './data/nomes-desord.mjs'
-
-console.time("Tempo de ordenação")
-let nomesOrd = mergeSort(nomes)
-// comando para ver quanto foi usado de memoria
+console.log(objMotoristasOrd)
 let memoriaMB = process.memoryUsage().heapUsed / 1024 / 1024
-console.timeEnd("Tempo de ordenação")
-
-console.log(nomesOrd)
 console.log("Comps:", comps, "Div:", divisoes, "Jun:", juncoes, "Memoria", memoriaMB)
